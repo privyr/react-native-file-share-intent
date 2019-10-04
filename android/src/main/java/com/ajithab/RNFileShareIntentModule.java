@@ -44,7 +44,9 @@ public class RNFileShareIntentModule extends ReactContextBaseJavaModule {
     Intent intent = mActivity.getIntent();
     String action = intent.getAction();
     String type = intent.getType();
+    int flags = intent.getFlags();
 
+    if ((flags & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) return;
     if (Intent.ACTION_SEND.equals(action) && type != null) {
       if ("text/plain".equals(type)) {
         String input = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -81,6 +83,7 @@ public class RNFileShareIntentModule extends ReactContextBaseJavaModule {
 
     Intent intent = mActivity.getIntent();
     String type = intent.getType();
+    if (type == null) return;
     if ("text/plain".equals(type)) {
       intent.removeExtra(Intent.EXTRA_TEXT);
     } else if (type.startsWith("image/") || type.startsWith("video/") || type.startsWith("application/")) {
